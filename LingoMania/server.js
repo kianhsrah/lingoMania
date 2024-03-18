@@ -8,6 +8,13 @@ const authRoutes = require("./routes/authRoutes");
 const lessonRoutes = require('./routes/lessonRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes');
 const userProgressRoutes = require('./routes/userProgressRoutes');
+const userRoutes = require('./routes/userRoutes'); // Added user routes
+const postRoutes = require('./routes/postRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const quizRoutes = require('./routes/quizRoutes'); // Import quiz routes
+const fs = require('fs').promises;
+const path = require('path');
+const acceptLanguageParser = require('accept-language-parser');
 
 if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
@@ -83,9 +90,48 @@ app.use(exerciseRoutes);
 // User Progress Routes
 app.use(userProgressRoutes);
 
+// User Routes - For profile and preferences
+app.use(userRoutes); // Registering the user routes
+
+// Post Routes - For creating, reading, updating, and deleting posts
+app.use(postRoutes);
+
+// Comment Routes - For creating, reading, updating, and deleting comments
+app.use(commentRoutes);
+
+// Quiz Routes - For creating, taking and evaluating quizzes
+app.use(quizRoutes);
+
 // Root path response
-app.get("/", (req, res) => {
-  res.render("index");
+app.get("/", async (req, res) => {
+  const preferredLanguages = acceptLanguageParser.parse(req.headers['accept-language']);
+  let preferredLanguage = 'en'; // Default to English
+  if(preferredLanguages.length > 0) {
+    // Find the highest quality language supported by the app
+    const supportedLanguages = ['en', 'es', 'fr']; // List of supported languages
+    preferredLanguage = preferredLanguages
+      .map(lang => lang.code)
+      .find(lang => supportedLanguages.includes(lang)) || 'en';
+  }
+  const filePath = path.join(__dirname, 'public', 'locales', preferredLanguage, 'translation.json');
+
+  try {
+    const data = await fs.readFile(filePath, 'utf8');
+    const messages = JSON.parse(data);
+    res.render("index", { welcomeMessage: messages.welcome });
+  } catch (err) {
+    console.error(`Error reading localization file: ${err.message}`, err.stack);
+    // Fallback to English if there's an error reading the preferred language file
+    const fallbackPath = path.join(__dirname, 'public', 'locales', 'en', 'translation.json');
+    try {
+      const fallbackData = await fs.readFile(fallbackPath, 'utf8');
+      const messages = JSON.parse(fallbackData);
+      res.render("index", { welcomeMessage: messages.welcome });
+    } catch (fallbackErr) {
+      console.error(`Error reading fallback localization file: ${fallbackErr.message}`, fallbackErr.stack);
+      res.status(500).send("Error loading the page.");
+    }
+  }
 });
 
 // If no routes handled the request, it's a 404

@@ -1,1 +1,55 @@
-/* Placeholder for custom styles */
+/* Responsive text sizes */
+html {
+  font-size: 100%;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 80%;
+  }
+}
+
+/* Ensure containers are fluid */
+.container {
+  max-width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Flexbox for navigation */
+.navbar-nav {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+/* Button enhancements */
+button {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Improvements for form elements */
+input, select, textarea {
+  font-size: 1rem;
+}
+
+/* Utility classes for accessibility improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

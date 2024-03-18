@@ -8,13 +8,19 @@
         <h2>Register</h2>
         <form action="/auth/register" method="POST">
           <div class="mb-3">
-            <input type="text" name="username" placeholder="Username" required class="form-control">
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" id="username" name="username" placeholder="Username" required class="form-control" aria-label="Username">
           </div>
           <div class="mb-3">
-            <input type="password" name="password" placeholder="Password" required class="form-control">
+            <label for="email" class="sr-only">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email" required class="form-control" aria-label="Email">
           </div>
           <div class="mb-3">
-            <button type="submit" class="btn btn-primary mr-2">Register</button>
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password" required class="form-control" aria-label="Password">
+          </div>
+          <div class="mb-3">
+            <button type="submit" class="btn btn-primary mr-2" aria-label="Register">Register</button>
             Already have an account? <a href="/auth/login">Login</a>
           </div>
         </form>

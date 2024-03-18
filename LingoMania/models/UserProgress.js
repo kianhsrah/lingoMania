@@ -5,7 +5,13 @@ const userProgressSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   languageCode: { type: String, required: true },
   lessonsCompleted: [{ type: Schema.Types.ObjectId, ref: 'Lesson' }],
-  exercisesCompleted: [{ type: Schema.Types.ObjectId, ref: 'Exercise' }]
+  exercisesCompleted: [{ type: Schema.Types.ObjectId, ref: 'Exercise' }],
+  quizzesCompleted: [{
+    quiz: { type: Schema.Types.ObjectId, ref: 'Quiz' },
+    score: { type: Number, required: true },
+    passed: { type: Boolean, required: true },
+    dateCompleted: { type: Date, default: Date.now }
+  }]
 });
 
 userProgressSchema.pre('save', function(next) {
